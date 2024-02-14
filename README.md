@@ -157,7 +157,7 @@ yarn build
 
 ### Класс Page
 
-Компонент главной страницы. Добавляет на страницу ленту карточек и вешает слушатель на элемент корзины. Изменяет количество элементов корзины в разметке.  Наследует класс Component
+Компонент главной страницы. Добавляет на страницу ленту карточек и вешает слушатель на элемент корзины. Изменяет количество элементов корзины в разметке. Наследует класс Component
 
 Конструктор принимает:
 
@@ -182,27 +182,27 @@ yarn build
 Конструктор принимает:
 
 - `blockName: string` — название блока
-- `container: HTMLElement` —  контейнер для вставки карточки
+- `container: HTMLElement` — контейнер для вставки карточки
 - `events: IEvents` — объект событий
 
 Свойства класса:
 
-`description: HTMLElement` — элемент описания товара 
-`image: HTMLImageElement` — элемент для вставки изображения
-`title: HTMLElement` — элемент названия товара
-`category: HTMLElement` — элемент категории товара
-`price: HTMLElement` — элемент с ценой товара
-`cardButton: HTMLButtonElement` — элемент кнопки товара
-`cardButtonTitle: string` — элемент с названием кнопки товара
+- `description: HTMLElement` — элемент описания товара
+- `image: HTMLImageElement` — элемент для вставки изображения
+- `title: HTMLElement` — элемент названия товара
+- `category: HTMLElement` — элемент категории товара
+- `price: HTMLElement` — элемент с ценой товара
+- `cardButton: HTMLButtonElement` — элемент кнопки товара
+- `cardButtonTitle: string` — элемент с названием кнопки товара
 
 Методы класса:
 
-`setDescription(value: string): void` — элемент описания товара 
-`setImage(value: string): void` — элемент для вставки изображения
-`setTitle(value: string): void` — элемент названия товара
-`setCategory(value: string): void` — элемент категории товара
-`setPrice(value: number): void` — элемент с ценой товара
-`setCardButtonTitle(value: string): void` — элемент с названием кнопки товара
+- `setDescription(value: string): void` — элемент описания товара
+- `setImage(value: string): void` — элемент для вставки изображения
+- `setTitle(value: string): void` — элемент названия товара
+- `setCategory(value: string): void` — элемент категории товара
+- `setPrice(value: number): void` — элемент с ценой товара
+- `setCardButtonTitle(value: string): void` — элемент с названием кнопки товара
 
 ### Класс Basket
 
@@ -245,7 +245,6 @@ yarn build
 - `render(data: IModalData): HTMLElement` — создает разметку с учетом вставленных данных
 - `setContent(value: HTMLElement): void` — установить данные в модалку
 
-
 ### Класс Form
 
 Получает тип в виде дженерика: `Form<T>`. Компонент для отображения и управления формами, наследует класс Component. Предоставляет функционал для проверки форм, валидации, рендера результата
@@ -283,7 +282,7 @@ yarn build
 
 ### Класс ContactsForm
 
-Компонент отображения формы ввода контактов для совершения заказа, наследует класс Form.  При заполненных полях позволяет создать заказ
+Компонент отображения формы ввода контактов для совершения заказа, наследует класс Form. При заполненных полях позволяет создать заказ
 
 Конструктор принимает:
 
@@ -319,7 +318,7 @@ interface IPage {
 
 // интерфейс данных приложения
 interface IAppState {
-	catalog: IProductItem[] // массив с карточками для отображения
+	catalog: IProductItem[]; // массив с карточками для отображения
 	basket: string[]; // массив с идентификаторами заказов в корзине
 	order: IOrder | null; // хранит заказ для отправки на сервер
 }
