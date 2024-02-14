@@ -1,65 +1,57 @@
 // интерфейс данных страницы приложения
-export interface IPage {
-	counter: number;
-	catalog: HTMLElement[];
-	locked: boolean;
+interface IPage {
+	counter: HTMLElement; // элемент счетчика корзины
+	catalog: HTMLElement; // контейнер для отображения карточек
+	basket: HTMLElement; // элемент корзины
 }
 
-// интерфейс данных приложения (список карточек с сервера, корзина, заказ)
-export interface IAppState {
-	catalog: IProductItem[];
-	basket: IProductItem[];
-	delivery: IDeliveryForm | null;
-	contact: IContactsForm | null;
-	preview: string | null;
-	order: IOrder | null;
+// интерфейс данных приложения
+interface IAppState {
+	catalog: IProductItem[]; // массив с карточками для отображения
+	basket: string[]; // массив с идентификаторами заказов в корзине
+	order: IOrder | null; // хранит заказ для отправки на сервер
 }
 
 // интерфейс данных единицы товара
-export interface IProductItem {
-	id: string;
-	description: string;
-	image: string;
-	title: string;
-	category: string;
-	price: number;
-}
-
-// интерфейс данных заказа для отправки на сервер
-export interface IOrder {
-	payment: string;
-	email: string;
-	phone: string;
-	address: string;
-	total: number;
-	items: string[];
-}
-
-// интерфейс данных формы с адресом доставки
-export interface IDeliveryForm {
-	payment: string;
-	adress: string;
-}
-
-// интерфейс данных формы с контактами
-export interface IContactsForm {
-	email: string;
-	phone: string;
+interface IProductItem {
+	id: string; // идентификатор
+	description: string; // описание
+	image: string; // ссылка на изображение
+	title: string; // название
+	category: string; // категория
+	price: number; // цена
 }
 
 // интерфейс данных заказа
-export interface IOrder extends IDeliveryForm, IContactsForm {
-	items: string[];
-	total: number;
+interface IOrder extends IDeliveryForm, IContactsForm {
+	total: number; // сумма заказа
+	items: string[]; // массив с идентификаторами товаров
+}
+
+// интерфейс данных формы с адресом доставки
+interface IDeliveryForm {
+	payment: string; // способ оплаты
+	adress: string; // адрес
+}
+
+// интерфейс данных формы с контактами
+interface IContactsForm {
+	email: string; // почта
+	phone: string; // телефон
 }
 
 // интерфейс корзины
-export interface IBasketView {
-	items: HTMLElement[];
-	total: number;
+interface IBasket {
+	items: HTMLElement[]; // массив карточек в корзине
+	total: number; // сумма заказа
 }
 
 // интерфейс успешного совершения заказа
-export interface ISuccess {
-	total: number | null;
+interface ISuccess {
+	total: number | null; // сумма заказа с сервера в ответ на успешный заказ
+}
+
+// интерфейс данных модального окна
+interface IModalData {
+	content: HTMLElement;
 }
