@@ -1,18 +1,8 @@
 import { Component } from './base/Component';
 import { ensureElement } from '../utils/utils';
+import { ICardActions, ICard, CatalogItemStatus } from '../types/index';
 
-interface ICardActions {
-	onClick: (event: MouseEvent) => void;
-}
-
-export interface ICard<T> {
-	title: string;
-	image: string;
-	price: number;
-	category: string;
-}
-
-export class Card<T> extends Component<ICard<T>> {
+export class Card<T> extends Component<ICard> {
 	protected _title: HTMLElement;
 	protected _image: HTMLImageElement;
 	protected _price: HTMLElement;
@@ -32,9 +22,6 @@ export class Card<T> extends Component<ICard<T>> {
 			`.${blockName}__price`,
 			container
 		);
-
-		// this._category = container.querySelector(`.${blockName}__category`);
-		console.log(this._price);
 
 		// this._button = container.querySelector(`.${blockName}__button`);
 
@@ -61,10 +48,6 @@ export class Card<T> extends Component<ICard<T>> {
 			: this.setText(this._price, `${value} синапсов`);
 	}
 }
-
-export type CatalogItemStatus = {
-	category: 'софт-скил' | 'хард-скил' | 'другое' | 'кнопка' | 'дополнительное';
-};
 
 export class CatalogItem extends Card<CatalogItemStatus> {
 	protected _category: HTMLElement;

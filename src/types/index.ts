@@ -1,3 +1,13 @@
+// интерфейс события
+export interface ICardActions {
+	onClick: (event: MouseEvent) => void;
+}
+
+// тип категории товара
+export type CatalogItemStatus = {
+	category: 'софт-скил' | 'хард-скил' | 'другое' | 'кнопка' | 'дополнительное';
+};
+
 // интерфейс данных страницы приложения
 export interface IPage {
 	counter: HTMLElement; // элемент счетчика корзины
@@ -20,6 +30,14 @@ export interface IProductItem {
 	title: string; // название
 	category: string; // категория
 	price: number; // цена
+}
+
+// интерфейс данных единицы товара на главной странице
+export interface ICard {
+	title: string;
+	image: string;
+	price: number;
+	category: string;
 }
 
 // интерфейс данных заказа
