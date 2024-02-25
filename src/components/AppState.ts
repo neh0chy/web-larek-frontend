@@ -8,12 +8,27 @@ export type CatalogChangeEvent = {
 export class AppState extends Model<IAppState> {
 	catalog: IProductItem[];
 	basket: string[];
-	order: IOrder | null;
+	order: IOrder = {
+		total: 0,
+		items: [],
+		payment: '',
+		address: '',
+		email: '',
+		phone: '',
+	};
 
+	clearBasket() {
+		this.basket = [];
+		this.order.items = [];
+	}
 	setCatalog(items: IProductItem[]) {
 		this.catalog = items;
 		this.emitChanges('items:changed');
 		// console.log(this.catalog);
+	}
+
+	addToOrder(item: IProductItem) {
+		this.order.items.push(item.id);
 	}
 
 	// clearBasket() {

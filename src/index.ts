@@ -5,9 +5,10 @@ import { API_URL, CDN_URL } from './utils/constants';
 import { EventEmitter } from './components/base/events';
 import { AppState } from './components/AppState';
 import { cloneTemplate, createElement, ensureElement } from './utils/utils';
-import { Card, CatalogItem } from './components/Card';
+import { Card } from './components/Card';
 import { Page } from './components/Page';
 import { Modal } from './components/Modal';
+import { IProductItem } from './types';
 
 const events = new EventEmitter();
 const api = new LarekAPI(CDN_URL, API_URL);
@@ -36,8 +37,8 @@ const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), events);
 // Данные карточек рендерим и сохраняем в модели данных
 events.on('items:changed', () => {
 	page.catalog = appData.catalog.map((item) => {
-		const card = new CatalogItem(cloneTemplate(cardCatalogTemplate), {
-			onClick: () => events.emit('items:test', item),
+		const card = new Card('card', cloneTemplate(cardCatalogTemplate), {
+			onClick: () => events.emit('card:select', item),
 		});
 		return card.render({
 			title: item.title,
@@ -48,19 +49,41 @@ events.on('items:changed', () => {
 	});
 });
 
-// events.on('card:open', () => {
-// 	modal.render({
-// 		content: order.render({
-// 			phone: '',
-// 			email: '',
-// 			valid: false,
-// 			errors: [],
-// 		}),
-// 	});
-// });
+// открытие карточки
+events.on('card:select', (item: IProductItem) => {
+	const card = new Card('card', cloneTemplate(cardPreviewTemplate), {
+		onClick: () => events.emit('card:add', item),
+	});
+	modal.render({
+		content: card.render({
+			title: item.title,
+			image: item.image,
+			description: item.description,
+			price: item.price,
+			category: item.category,
+		}),
+	});
+});
+
+events.on('card:add', (item: IProductItem) => {
+	appData.addToOrder(item);
+	// appData.putToBasket(item);
+	// page.counter = appData.bskt.length;
+	modal.close();
+});
 
 events.on('items:test', (item) => {
 	console.log(item);
+});
+
+// заморозка прокрутки при открытии модалки
+events.on('modal:open', () => {
+	page.locked = true;
+});
+
+// разморозка прокрутки при закрытии модалки
+events.on('modal:close', () => {
+	page.locked = false;
 });
 
 // Получаем лоты с сервера

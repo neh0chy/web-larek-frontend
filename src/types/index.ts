@@ -19,7 +19,7 @@ export interface IPage {
 export interface IAppState {
 	catalog: IProductItem[]; // массив с карточками для отображения
 	basket: string[]; // массив с идентификаторами заказов в корзине
-	order: IOrder | null; // хранит заказ для отправки на сервер
+	order: IOrder; // хранит заказ для отправки на сервер
 }
 
 // интерфейс данных единицы товара
@@ -33,12 +33,12 @@ export interface IProductItem {
 }
 
 // интерфейс данных единицы товара на главной странице
-export interface ICard {
-	title: string;
-	image: string;
-	price: number;
-	category: string;
-}
+// export interface ICard {
+// 	title: string;
+// 	image: string;
+// 	price: number;
+// 	category: string;
+// }
 
 // интерфейс данных в превью
 export interface ICardPreview {
@@ -54,7 +54,7 @@ export interface IOrder extends IDeliveryForm, IContactsForm {
 // интерфейс данных формы с адресом доставки
 export interface IDeliveryForm {
 	payment: string; // способ оплаты
-	adress: string; // адрес
+	address: string; // адрес
 }
 
 // интерфейс данных формы с контактами
