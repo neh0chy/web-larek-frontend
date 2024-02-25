@@ -40,6 +40,11 @@ export interface ICard {
 	category: string;
 }
 
+// интерфейс данных в превью
+export interface ICardPreview {
+	text: string;
+}
+
 // интерфейс данных заказа
 export interface IOrder extends IDeliveryForm, IContactsForm {
 	total: number; // сумма заказа
