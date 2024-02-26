@@ -91,5 +91,5 @@ export interface IModalData {
 
 // интерфейс данных ответа сервера на создание заказа
 export interface IOrderResult {
-	id: string;
+	total: number; // идентификатор заказа
 }

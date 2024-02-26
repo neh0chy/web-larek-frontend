@@ -79,6 +79,7 @@ export class AppState extends Model<IAppState> {
 
 	setContactsField(field: keyof IDeliveryForm, value: string) {
 		this.order[field] = value;
+		// console.log(`field: ${field}` + ' ' + `value: ${value}`);
 
 		if (this.validateContacts()) {
 			this.events.emit('order:ready', this.order);
@@ -91,6 +92,10 @@ export class AppState extends Model<IAppState> {
 			errors.address = 'Необходимо указать адрес';
 		}
 
+		if (!this.order.payment) {
+			errors.address = 'Необходимо выбрать способ оплаты';
+		}
+
 		this.formErrors = errors;
 		this.events.emit('formErrors:change', this.formErrors);
 		return Object.keys(errors).length === 0;
@@ -98,6 +103,7 @@ export class AppState extends Model<IAppState> {
 
 	validateContacts() {
 		const errors: typeof this.formErrors = {};
+
 		if (!this.order.email) {
 			errors.email = 'Необходимо указать email';
 		}

@@ -166,6 +166,7 @@ events.on('formErrors:change', (errors: Partial<IOrder>) => {
 // реакция на выбор способа оплаты
 events.on('payment:change', (item: HTMLButtonElement) => {
 	appData.order.payment = item.name;
+	appData.validateOrder();
 });
 
 // обработка изменения поля ввода доставки
@@ -192,16 +193,17 @@ events.on('contacts:submit', () => {
 			const success = new Success(cloneTemplate(successTemplate), {
 				onClick: () => {
 					modal.close();
-					appData.clearBasket();
-					page.counter = appData.basket.length;
 				},
 			});
 
 			modal.render({
 				content: success.render({
-					total: appData.getTotal(),
+					total: res.total,
 				}),
 			});
+
+			appData.clearBasket();
+			page.counter = 0;
 		})
 		.catch((err) => {
 			console.error(err);
