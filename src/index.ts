@@ -8,6 +8,7 @@ import { cloneTemplate, ensureElement } from './utils/utils';
 import { Card, CardPreview, CardBasket } from './components/Card';
 import { Page } from './components/Page';
 import { Modal } from './components/Modal';
+import { Order } from './components/Order';
 import { IProductItem } from './types';
 import { Basket } from './components/Basket';
 
@@ -40,6 +41,7 @@ const basket = new Basket(
 	cloneTemplate<HTMLTemplateElement>(basketTemplate),
 	events
 );
+const order = new Order(cloneTemplate<HTMLFormElement>(orderTemplate), events);
 
 // данные карточек рендерим и сохраняем в модели данных
 events.on('items:changed', () => {
@@ -120,16 +122,16 @@ events.on('card:remove', (item: IProductItem) => {
 	});
 });
 
-// events.on('order:open', () => {
-//   modal.render({
-//     content: order.render({
-//       address: '',
-//       payment: 'card',
-//       valid: false,
-//       errors: []
-//     })
-//   });
-// });
+events.on('order:open', () => {
+	modal.render({
+		content: order.render({
+			address: '',
+			payment: 'card',
+			valid: false,
+			errors: [],
+		}),
+	});
+});
 
 events.on('items:test', (item) => {
 	console.log(item);
