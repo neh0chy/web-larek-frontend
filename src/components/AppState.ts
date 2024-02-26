@@ -7,7 +7,7 @@ export type CatalogChangeEvent = {
 
 export class AppState extends Model<IAppState> {
 	catalog: IProductItem[];
-	basket: string[];
+	basket: IProductItem[] = [];
 	order: IOrder = {
 		total: 0,
 		items: [],
@@ -29,6 +29,10 @@ export class AppState extends Model<IAppState> {
 
 	addToOrder(item: IProductItem) {
 		this.order.items.push(item.id);
+	}
+
+	putToBasket(item: IProductItem) {
+		this.basket.push(item);
 	}
 
 	// clearBasket() {

@@ -33,16 +33,23 @@ export interface IProductItem {
 }
 
 // интерфейс данных единицы товара на главной странице
-// export interface ICard {
-// 	title: string;
-// 	image: string;
-// 	price: number;
-// 	category: string;
-// }
+export interface ICard {
+	image: string; // ссылка на изображение
+	title: string; // название
+	category: string; // категория
+	price: number; // цена
+	description: string; // описание
+}
 
 // интерфейс данных в превью
 export interface ICardPreview {
-	text: string;
+	description: string; // описание
+}
+
+export interface ICardBasket {
+	title: string; // название
+	price: number; // цена
+	index: number; // индекс в списке
 }
 
 // интерфейс данных заказа
