@@ -3,6 +3,9 @@ export interface ICardActions {
 	onClick: (event: MouseEvent) => void;
 }
 
+// тип ошибки формы
+export type FormErrors = Partial<Record<keyof IOrder, string>>;
+
 // тип категории товара
 export type CatalogItemStatus = {
 	category: 'софт-скил' | 'хард-скил' | 'другое' | 'кнопка' | 'дополнительное';
@@ -52,12 +55,6 @@ export interface ICardBasket {
 	index: number; // индекс в списке
 }
 
-// интерфейс данных заказа
-export interface IOrder extends IDeliveryForm, IContactsForm {
-	total: number; // сумма заказа
-	items: string[]; // массив с идентификаторами товаров
-}
-
 // интерфейс данных формы с адресом доставки
 export interface IDeliveryForm {
 	payment: string; // способ оплаты
@@ -68,6 +65,12 @@ export interface IDeliveryForm {
 export interface IContactsForm {
 	email: string; // почта
 	phone: string; // телефон
+}
+
+// интерфейс данных заказа
+export interface IOrder extends IDeliveryForm, IContactsForm {
+	total: number; // сумма заказа
+	items: string[]; // массив с идентификаторами товаров
 }
 
 // интерфейс корзины
@@ -84,4 +87,9 @@ export interface ISuccess {
 // интерфейс данных модального окна
 export interface IModalData {
 	content: HTMLElement;
+}
+
+// интерфейс данных ответа сервера на создание заказа
+export interface IOrderResult {
+	id: string;
 }

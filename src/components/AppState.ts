@@ -1,5 +1,12 @@
 import { Model } from './base/Model';
-import { IAppState, IOrder, IProductItem } from '../types/index';
+import {
+	IAppState,
+	IOrder,
+	IProductItem,
+	FormErrors,
+	IContactsForm,
+	IDeliveryForm,
+} from '../types/index';
 
 export type CatalogChangeEvent = {
 	catalog: IProductItem[];
@@ -8,6 +15,7 @@ export type CatalogChangeEvent = {
 export class AppState extends Model<IAppState> {
 	catalog: IProductItem[];
 	basket: IProductItem[] = [];
+	formErrors: FormErrors = {};
 	order: IOrder = {
 		total: 0,
 		items: [],
@@ -49,13 +57,6 @@ export class AppState extends Model<IAppState> {
 		this.order.items = [];
 	}
 
-	// clearBasket() {
-	// 	this.order.items.forEach((id) => {
-	// 		this.toggleOrderedLot(id, false);
-	// 		this.catalog.find((it) => it.id === id).clearBid();
-	// 	});
-	// }
-
 	getTotal() {
 		return this.order.items.reduce(
 			(a, c) => a + this.catalog.find((it) => it.id === c).price,
@@ -67,41 +68,46 @@ export class AppState extends Model<IAppState> {
 		return this.basket.length === 0;
 	}
 
-	// setPreview(item: LotItem) {
-	// 	this.preview = item.id;
-	// 	this.emitChanges('preview:changed', item);
-	// }
+	setOrderField(field: keyof IContactsForm, value: string) {
+		this.order[field] = value;
+		// console.log(`field: ${field}` + ' ' + `value: ${value}`);
 
-	// getActiveLots(): LotItem[] {
-	// 	return this.catalog.filter(
-	// 		(item) => item.status === 'active' && item.isParticipate
-	// 	);
-	// }
+		if (this.validateOrder()) {
+			this.events.emit('order:ready', this.order);
+		}
+	}
 
-	// getClosedLots(): LotItem[] {
-	// 	return this.catalog.filter(
-	// 		(item) => item.status === 'closed' && item.isMyBid
-	// 	);
-	// }
+	setContactsField(field: keyof IDeliveryForm, value: string) {
+		this.order[field] = value;
 
-	// setOrderField(field: keyof IOrderForm, value: string) {
-	// 	this.order[field] = value;
+		if (this.validateContacts()) {
+			this.events.emit('order:ready', this.order);
+		}
+	}
 
-	// 	if (this.validateOrder()) {
-	// 		this.events.emit('order:ready', this.order);
-	// 	}
-	// }
+	validateOrder() {
+		const errors: typeof this.formErrors = {};
+		if (!this.order.address) {
+			errors.address = 'Необходимо указать адрес';
+		}
 
-	// validateOrder() {
-	// 	const errors: typeof this.formErrors = {};
-	// 	if (!this.order.email) {
-	// 		errors.email = 'Необходимо указать email';
-	// 	}
-	// 	if (!this.order.phone) {
-	// 		errors.phone = 'Необходимо указать телефон';
-	// 	}
-	// 	this.formErrors = errors;
-	// 	this.events.emit('formErrors:change', this.formErrors);
-	// 	return Object.keys(errors).length === 0;
-	// }
+		this.formErrors = errors;
+		this.events.emit('formErrors:change', this.formErrors);
+		return Object.keys(errors).length === 0;
+	}
+
+	validateContacts() {
+		const errors: typeof this.formErrors = {};
+		if (!this.order.email) {
+			errors.email = 'Необходимо указать email';
+		}
+
+		if (!this.order.phone) {
+			errors.phone = 'Необходимо указать телефон';
+		}
+
+		this.formErrors = errors;
+		this.events.emit('formErrors:change', this.formErrors);
+		return Object.keys(errors).length === 0;
+	}
 }

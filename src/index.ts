@@ -9,8 +9,10 @@ import { Card, CardPreview, CardBasket } from './components/Card';
 import { Page } from './components/Page';
 import { Modal } from './components/Modal';
 import { Order } from './components/Order';
-import { IProductItem } from './types';
+import { IOrder, IProductItem, IDeliveryForm, IContactsForm } from './types';
+import { Contacts } from './components/Contacts';
 import { Basket } from './components/Basket';
+import { Success } from './components/Success';
 
 const events = new EventEmitter();
 const api = new LarekAPI(CDN_URL, API_URL);
@@ -42,6 +44,7 @@ const basket = new Basket(
 	events
 );
 const order = new Order(cloneTemplate<HTMLFormElement>(orderTemplate), events);
+const contacts = new Contacts(cloneTemplate(contactsTemplate), events);
 
 // данные карточек рендерим и сохраняем в модели данных
 events.on('items:changed', () => {
@@ -106,11 +109,11 @@ events.on('card:remove', (item: IProductItem) => {
 	page.counter = appData.basket.length;
 	basket.setDisabled(basket.button, appData.isBasketEmpty);
 	basket.total = appData.getTotal();
-	let i = 1;
 	basket.items = appData.basket.map((item) => {
 		const card = new CardBasket(cloneTemplate(cardBasketTemplate), {
 			onClick: () => events.emit('card:remove', item),
 		});
+		let i = 1;
 		return card.render({
 			title: item.title,
 			price: item.price,
@@ -122,15 +125,87 @@ events.on('card:remove', (item: IProductItem) => {
 	});
 });
 
+// рендер модалки с заказом
 events.on('order:open', () => {
 	modal.render({
 		content: order.render({
 			address: '',
-			payment: 'card',
+			payment: '',
 			valid: false,
 			errors: [],
 		}),
 	});
+});
+
+// рендер модалки с контактами
+events.on('order:submit', () => {
+	appData.order.total = appData.getTotal();
+	modal.render({
+		content: contacts.render({
+			email: '',
+			phone: '',
+			valid: false,
+			errors: [],
+		}),
+	});
+});
+
+// запуск валидации
+events.on('formErrors:change', (errors: Partial<IOrder>) => {
+	const { email, phone, address, payment } = errors;
+	order.valid = !address && !payment;
+	contacts.valid = !email && !phone;
+	order.errors = Object.values({ address, payment })
+		.filter((i) => !!i)
+		.join('; ');
+	contacts.errors = Object.values({ phone, email })
+		.filter((i) => !!i)
+		.join('; ');
+});
+
+// реакция на выбор способа оплаты
+events.on('payment:change', (item: HTMLButtonElement) => {
+	appData.order.payment = item.name;
+});
+
+// обработка изменения поля ввода доставки
+events.on(
+	/^order\..*:change/,
+	(data: { field: keyof IContactsForm; value: string }) => {
+		appData.setOrderField(data.field, data.value);
+	}
+);
+
+// обработка изменения поля ввода контактов
+events.on(
+	/^contacts\..*:change/,
+	(data: { field: keyof IDeliveryForm; value: string }) => {
+		appData.setContactsField(data.field, data.value);
+	}
+);
+
+//Отправляем форму контактов и открываем окно с успешным заказом
+events.on('contacts:submit', () => {
+	api
+		.makeOrder(appData.order)
+		.then((res) => {
+			const success = new Success(cloneTemplate(successTemplate), {
+				onClick: () => {
+					modal.close();
+					appData.clearBasket();
+					page.counter = appData.basket.length;
+				},
+			});
+
+			modal.render({
+				content: success.render({
+					total: appData.getTotal(),
+				}),
+			});
+		})
+		.catch((err) => {
+			console.error(err);
+		});
 });
 
 events.on('items:test', (item) => {
@@ -147,7 +222,7 @@ events.on('modal:close', () => {
 	page.locked = false;
 });
 
-// олучаем данные с сервера
+// получение данных с сервера
 api
 	.getLarekList()
 	.then(appData.setCatalog.bind(appData))
