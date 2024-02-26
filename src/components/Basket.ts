@@ -45,6 +45,6 @@ export class Basket extends Component<IBasket> {
 	}
 
 	set total(total: number) {
-		this.setText(this._total, formatNumber(total));
+		this.setText(this._total, formatNumber(total) + ' ' + 'синапсов');
 	}
 }

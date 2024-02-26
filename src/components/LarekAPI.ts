@@ -3,10 +3,6 @@ import { IProductItem } from '../types/index';
 
 export interface IAuctionAPI {
 	getLarekList: () => Promise<IProductItem[]>;
-	// getLotItem: (id: string) => Promise<ILot>;
-	// getLotUpdate: (id: string) => Promise<LotUpdate>;
-	// placeBid(id: string, bid: IBid): Promise<LotUpdate>;
-	// orderLots: (order: IOrder) => Promise<IOrderResult>;
 }
 
 export class LarekAPI extends Api implements IAuctionAPI {

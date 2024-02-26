@@ -17,22 +17,36 @@ export class AppState extends Model<IAppState> {
 		phone: '',
 	};
 
-	clearBasket() {
-		this.basket = [];
-		this.order.items = [];
-	}
 	setCatalog(items: IProductItem[]) {
 		this.catalog = items;
 		this.emitChanges('items:changed');
-		// console.log(this.catalog);
 	}
 
-	addToOrder(item: IProductItem) {
+	addOrderID(item: IProductItem) {
 		this.order.items.push(item.id);
 	}
 
-	putToBasket(item: IProductItem) {
+	remOrderID(item: IProductItem) {
+		const index = this.order.items.indexOf(item.id);
+		if (index >= 0) {
+			this.order.items.splice(index, 1);
+		}
+	}
+
+	addBasket(item: IProductItem) {
 		this.basket.push(item);
+	}
+
+	remBasket(item: IProductItem) {
+		const index = this.basket.indexOf(item);
+		if (index >= 0) {
+			this.basket.splice(index, 1);
+		}
+	}
+
+	clearBasket() {
+		this.basket = [];
+		this.order.items = [];
 	}
 
 	// clearBasket() {
@@ -42,12 +56,16 @@ export class AppState extends Model<IAppState> {
 	// 	});
 	// }
 
-	// getTotal() {
-	// 	return this.order.items.reduce(
-	// 		(a, c) => a + this.catalog.find((it) => it.id === c).price,
-	// 		0
-	// 	);
-	// }
+	getTotal() {
+		return this.order.items.reduce(
+			(a, c) => a + this.catalog.find((it) => it.id === c).price,
+			0
+		);
+	}
+
+	get isBasketEmpty(): boolean {
+		return this.basket.length === 0;
+	}
 
 	// setPreview(item: LotItem) {
 	// 	this.preview = item.id;

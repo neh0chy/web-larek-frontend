@@ -80,9 +80,16 @@ export class CardBasket extends Component<ICardBasket> {
 	constructor(container: HTMLElement, actions?: ICardActions) {
 		super(container);
 		container.removeEventListener('click', actions.onClick);
-		this._index = container.querySelector(`.basket__item-index`);
 		this._title = ensureElement<HTMLElement>(`.card__title`, container);
 		this._price = ensureElement<HTMLImageElement>(`.card__price`, container);
+		this._index = container.querySelector(`.basket__item-index`);
+		this._buttonElement = container.querySelector(`.card__button`);
+
+		if (actions?.onClick) {
+			if (this._buttonElement) {
+				this._buttonElement.addEventListener('click', actions.onClick);
+			}
+		}
 	}
 
 	set title(value: string) {
