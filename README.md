@@ -129,29 +129,27 @@ yarn build
 
 Класс хранит текущие данные (состояния) для отдельных элементов приложения и обрабатывает эти данные. Наследует класс Model
 
-Конструктор принимает:
-
-- `data: Partial<T>` — данные
-- `events: IEvents` — объект событий
-
 Свойства класса:
 
 - `сatalog: IProductItem[]` — массив с карточками для отображения
 - `basket: string[]` — массив с идентификаторами заказов в корзине
-- `order: IOrder | null` — хранит заказ для отправки на сервер
+- `formErrors: FormErrors` — ошибки валидации форм
+- `order: IOrder` — хранит заказ для отправки на сервер
 
 Методы класса:
 
 - `setCatalog: void` — добавить карточки товаров
+- `addOrderID(item: IProductItem): void` — добавить ID карточки для заказа
+- `remOrderID(item: IProductItem)`
+- `addBasket(item: IProductItem): void` — добавить переданный элемент в корзину
+- `remBasket(item: IProductItem): void` — удалить переданный элемент из корзины
 - `clearBasket(): void` — очистить корзину
-- `clearOrder(): void` — очищает массив заказа
-- `addBasketItem(item: IProductItem): void` — добавить переданный элемент в корзину
-- `remBasketItem(item: IProductItem): void` — удалить переданный элемент из корзины
-- `isItemExists(item: IProductItem): void` —  проверяет наличие существующего элемента в корзине
-- `validateForm(): boolean` — валидация полноты заполненных данных форм
 - `getTotal(): void` — расчёт финальной стоимости корзины
-- `setDeliveryData()` — данные из формы по доставке
-- `setContactsData()` — данные из формы контактов
+- `setOrderField(field: keyof IContactsForm, value: string): void` — сохранить данные заказа в зависимости от переданного ключа
+- `setContactsField(field: keyof IDeliveryForm, value: string): void` — сохранить данные контактов в зависимости от переданного ключа
+- `validateOrder(): void` — валидация полей заказа
+- `validateContacts(): void` — валидация полей контактов
+- `get isBasketEmpty(): boolean` — геттер проверки пустоты корзины
 
 ## Компоненты модели представления
 
@@ -166,63 +164,116 @@ yarn build
 
 Свойства класса:
 
-- `counter: HTMLElement` — элемент счетчика корзины
-- `catalog: HTMLElement` — контейнер для отображения карточек
-- `basket: HTMLElement` — элемент корзины
+- `_counter: HTMLElement` — элемент счетчика корзины
+- `_catalog: HTMLElement` — контейнер для отображения карточек
+- `_wrapper: HTMLElement` — контейнер для блокировки скролла при открытой модалке
+- `_basket: HTMLElement` — элемент корзины
 
 Методы класса:
 
-- `setCounter(value: number): void` — добавить карточки товаров
-- `setCatalog(items: HTMLElement[]): void` — очистить корзину
+- `set counter(value: number)` — установить в разметку количество элементов корзины
+- `set catalog(items: HTMLElement[])` — добавить карточки товаров на главной странице
+- `set locked(value: boolean)` — блокировать скролл при открытой модалке
 
 ### Класс Card
 
-Компонент отрисовки карточки товара, наследует класс Component. Добавляет поля в карточку и возвращает готовую разметку
+Получает тип в виде дженерика: `Card<T>`. Компонент отрисовки карточки товара, наследует класс Component. Добавляет поля в карточку и возвращает готовую разметку
 
 Конструктор принимает:
 
-- `blockName: string` — название блока
 - `container: HTMLElement` — контейнер для вставки карточки
-- `events: IEvents` — объект событий
+- `actions?: ICardActions` — экшены для установки на слушатели событий
 
 Свойства класса:
 
-- `description: HTMLElement` — элемент описания товара
-- `image: HTMLImageElement` — элемент для вставки изображения
-- `title: HTMLElement` — элемент названия товара
-- `category: HTMLElement` — элемент категории товара
-- `price: HTMLElement` — элемент с ценой товара
-- `cardButton: HTMLButtonElement` — элемент кнопки товара
-- `cardButtonTitle: string` — элемент с названием кнопки товара
+- `_title: HTMLElement` — элемент названия товара
+- `_image: HTMLImageElement` — элемент для вставки изображения
+- `_price: HTMLElement` — элемент с ценой товара
+- `_category: HTMLElement` — элемент категории товара
+- `_buttonElement: HTMLButtonElement` — элемент кнопки
+- `_categoryColorsList = <Record<string, string>>` — список категорий товаров
 
 Методы класса:
 
-- `setDescription(value: string): void` — элемент описания товара
-- `setImage(value: string): void` — элемент для вставки изображения
-- `setTitle(value: string): void` — элемент названия товара
-- `setCategory(value: string): void` — элемент категории товара
-- `setPrice(value: number): void` — элемент с ценой товара
-- `setCardButtonTitle(value: string): void` — элемент с названием кнопки товара
+- `set title(value: string)` — установить название товара
+- `set image(value: string)` — установить изображение
+- `set price(value: number)` — установить цену
+- `set category(value: string)` — установить категорию товара
+
+### Класс CardPreview
+
+Компонент отображения информации о карточке в модальном окне, наследует класс Card. Добавляет описание товара, расширяя родительский класс Card
+
+Конструктор принимает:
+
+- `container: HTMLElement` — контейнер для вставки карточки
+- `actions?: ICardActions` — экшены для установки на слушатели событий
+
+Свойства класса:
+
+- `_description: HTMLElement` — описание единицы товара
+- `_buttonElement: HTMLButtonElement` — элемент кнопки
+
+Методы класса:
+
+- `set description(value: string)` — установить описание единицы товара
+
+### Класс CardBasket
+
+Компонент отображения информации о карточке в модальном окне корзины, наследует класс Component. Устанавливает данные для отображения карточки в корзине
+
+Конструктор принимает:
+
+- `container: HTMLElement` — контейнер для вставки карточки
+- `actions?: ICardActions` — экшены для установки на слушатели событий
+
+Свойства класса:
+
+- `_title: HTMLElement` — описание единицы товара
+- `_price: HTMLElement` — цена товара
+- `_buttonElement: HTMLButtonElement` — элемент кнопки
+- `_index: HTMLElement` — номер товара в корзине
+
+Методы класса:
+
+- `set title(value: string)` — установить описание единицы товара
+- `set price(value: number)` — установить цену товара
+- `set index(value: number)`— установить номер товара
+
+### Класс LarekAPI
+
+Создает запрос на сервер на определенные эндпоинты, наследует класс Api
+
+Конструктор принимает:
+
+- `cdn: string` — адрес сервера с картинками для карточек товаров
+- `baseUrl: string` — базовый эндпоинт
+- `options?: RequestInit` — опции
+
+Методы класса:
+
+- `getLarekList(): Promise<IProductItem[]>` — получить массив карточек
+- `makeOrder(value: IOrder): Promise<IOrderResult>` — разместить заказ на сервере
 
 ### Класс Basket
 
-Компонени отображения корзины приложения, наследует класс Component
+Компонент отображения корзины приложения, наследует класс Component. Устанавливает в разметку суммарную цену и элементы с товарами
 
 Конструктор принимает:
 
 - `container: HTMLElement` — контейнер для вставки данных
-- `events: IEvents` — объект событий
+- `events: EventEmitter` — объект событий
 
 Свойства класса:
 
-- `list: HTMLElement[]` — массив продуктов в корзине
+- `list: HTMLElement[]` — массив элементов в корзине
 - `total: HTMLElement` — элемент с финальной ценой
 - `button: HTMLButtonElement` — элемент кнопки
 
 Методы класса:
 
-- `setItems(items: HTMLElement[]): void` — установить список элементов корзины
-- `setTotal(total: number): void` — установить общую стоимость в разметку
+- `set items(items: HTMLElement[])` — установить список элементов корзины
+- `set total(total: number)` — установить общую стоимость в разметку
 
 ### Класс Modal
 
@@ -235,15 +286,15 @@ yarn build
 
 Свойства класса:
 
-- `closeButton: HTMLButtonElement` — элемент кнопки закрытия
-- `content: HTMLElement` — контент модального окна
+- `_closeButton: HTMLButtonElement` — элемент кнопки закрытия
+- `_content: HTMLElement` — контент модального окна
 
 Методы класса:
 
 - `open(): void` — открвает модалку
 - `close(): void` — закрывает модалку
 - `render(data: IModalData): HTMLElement` — создает разметку с учетом вставленных данных
-- `setContent(value: HTMLElement): void` — установить данные в модалку
+- `set content(value: HTMLElement)` — установить данные в модалку
 
 ### Класс Form
 
@@ -254,15 +305,19 @@ yarn build
 - `container: HTMLFormElement` — контейнер для вставки данных
 - `events: IEvents` — объект событий
 
+Свойства класса:
+
+- `_submit: HTMLButtonElement` — кнопка далее
+- `_errors: HTMLElement` — элемент для отображения ошибки
+
 Методы класса:
 
-- `onInputChange(): void` — валидация поля
-- `isValid(): void` — принимает решение о блокировке кнопки
-- `setError(: void)` — добавляет ошибку
+- `onInputChange(field: keyof T, value: string)` — валидация поля
+- `set valid(value: boolean)` — принимает решение о блокировке кнопки
+- `set errors(value: string)` — добавляет ошибку
 - `render(data: <T>): HTMLFormElement` — установить данные в модалку
-- `placeOrder(): void` — сделать заказ
 
-### Класс DeliveryForm
+### Класс Order
 
 Компонент отображения выбора способа оплаты и формы адреса для доставки, наследует класс Form
 
@@ -273,16 +328,16 @@ yarn build
 
 Свойства класса:
 
-- `nextButton: HTMLButtonElement` — кнопка далее
+- `_buttons: HTMLButtonElement[]` — кнопки выбора оплаты
 
 Методы класса:
 
-- `setPayment(value: string): void` — устанавливает выбранный способ оплаты
-- `setAddress(value: string): void` — устанавливает адрес доставки
+- `set payment(name: string)` — устанавливает выбранный способ оплаты
+- `set address(value: string)` — устанавливает адрес доставки
 
 ### Класс ContactsForm
 
-Компонент отображения формы ввода контактов для совершения заказа, наследует класс Form. При заполненных полях позволяет создать заказ
+Компонент отображения формы ввода контактов для совершения заказа, наследует класс Form
 
 Конструктор принимает:
 
@@ -302,29 +357,58 @@ yarn build
 
 Компонент отображения сообщения об успешном оформлении заказа, наследует класс Component
 
+Конструктор принимает:
+
+- `container: HTMLFormElement` — контейнер для вставки данных
+- `events: IEvents` — объект событий
+
 Свойства класса:
 
-- `closeButton: HTMLButtonElement` — элемент кнопки закрытия модалки с успешным заказом
+- `_close: HTMLElement` — кнопка закрытия окна
+- `_total: HTMLElement` — списанное количество денег
+
+Методы класса:
+
+- `set total(total: number | string)` — устанавливает списанное количество денег
 
 ## Описание типов данных
 
 ```ts
+// интерфейс события
+export interface ICardActions {
+	onClick: (event: MouseEvent) => void;
+}
+
+// интерфейс промиса
+export interface ILarekApi {
+	getLarekList: () => Promise<IProductItem[]>;
+	makeOrder: (value: IOrder) => Promise<IOrderResult>;
+}
+
+// тип ошибки формы
+export type FormErrors = Partial<Record<keyof IOrder, string>>;
+
+// тип категории товара
+export type CatalogItemStatus = {
+	category: 'софт-скил' | 'хард-скил' | 'другое' | 'кнопка' | 'дополнительное';
+};
+
 // интерфейс данных страницы приложения
-interface IPage {
+export interface IPage {
 	counter: HTMLElement; // элемент счетчика корзины
 	catalog: HTMLElement; // контейнер для отображения карточек
 	basket: HTMLElement; // элемент корзины
 }
 
 // интерфейс данных приложения
-interface IAppState {
+export interface IAppState {
 	catalog: IProductItem[]; // массив с карточками для отображения
 	basket: string[]; // массив с идентификаторами заказов в корзине
-	order: IOrder | null; // хранит заказ для отправки на сервер
+	order: IOrder; // хранит заказ для отправки на сервер
 }
 
 // интерфейс данных единицы товара
-interface IProductItem {
+export interface IProductItem {
 	id: string; // идентификатор
 	description: string; // описание
 	image: string; // ссылка на изображение
@@ -333,38 +417,63 @@ interface IProductItem {
 	price: number; // цена
 }
 
-// интерфейс данных заказа
-interface IOrder extends IDeliveryForm, IContactsForm {
-	total: number; // сумма заказа
-	items: string[]; // массив с идентификаторами товаров
+// интерфейс данных единицы товара на главной странице
+export interface ICard {
+	image: string; // ссылка на изображение
+	title: string; // название
+	category: string; // категория
+	price: number; // цена
+	description: string; // описание
+}
+
+// интерфейс данных в превью
+export interface ICardPreview {
+	description: string; // описание
+}
+
+export interface ICardBasket {
+	title: string; // название
+	price: number; // цена
+	index: number; // индекс в списке
 }
 
 // интерфейс данных формы с адресом доставки
-interface IDeliveryForm {
+export interface IDeliveryForm {
 	payment: string; // способ оплаты
-	adress: string; // адрес
+	address: string; // адрес
 }
 
 // интерфейс данных формы с контактами
-interface IContactsForm {
+export interface IContactsForm {
 	email: string; // почта
 	phone: string; // телефон
 }
 
+// интерфейс данных заказа
+export interface IOrder extends IDeliveryForm, IContactsForm {
+	total: number; // сумма заказа
+	items: string[]; // массив с идентификаторами товаров
+}
+
 // интерфейс корзины
-interface IBasket {
+export interface IBasket {
 	items: HTMLElement[]; // массив карточек в корзине
 	total: number; // сумма заказа
 }
 
 // интерфейс успешного совершения заказа
-interface ISuccess {
+export interface ISuccess {
 	total: number | null; // сумма заказа с сервера в ответ на успешный заказ
 }
 
 // интерфейс данных модального окна
-interface IModalData {
+export interface IModalData {
 	content: HTMLElement;
+}
+
+// интерфейс данных ответа сервера на создание заказа
+export interface IOrderResult {
+	total: number; // идентификатор заказа
 }
 ```
 

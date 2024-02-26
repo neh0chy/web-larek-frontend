@@ -1,11 +1,8 @@
-import { Api, ApiListResponse } from './base/api';
+import { Api, ApiListResponse } from './base/Api';
 import { IProductItem, IOrderResult, IOrder } from '../types/index';
+import { ILarekApi } from '../types/index';
 
-export interface IAuctionAPI {
-	getLarekList: () => Promise<IProductItem[]>;
-}
-
-export class LarekAPI extends Api implements IAuctionAPI {
+export class LarekAPI extends Api implements ILarekApi {
 	readonly cdn: string;
 
 	constructor(cdn: string, baseUrl: string, options?: RequestInit) {

@@ -64,13 +64,8 @@ export class AppState extends Model<IAppState> {
 		);
 	}
 
-	get isBasketEmpty(): boolean {
-		return this.basket.length === 0;
-	}
-
 	setOrderField(field: keyof IContactsForm, value: string) {
 		this.order[field] = value;
-		// console.log(`field: ${field}` + ' ' + `value: ${value}`);
 
 		if (this.validateOrder()) {
 			this.events.emit('order:ready', this.order);
@@ -79,7 +74,6 @@ export class AppState extends Model<IAppState> {
 
 	setContactsField(field: keyof IDeliveryForm, value: string) {
 		this.order[field] = value;
-		// console.log(`field: ${field}` + ' ' + `value: ${value}`);
 
 		if (this.validateContacts()) {
 			this.events.emit('order:ready', this.order);
@@ -115,5 +109,9 @@ export class AppState extends Model<IAppState> {
 		this.formErrors = errors;
 		this.events.emit('formErrors:change', this.formErrors);
 		return Object.keys(errors).length === 0;
+	}
+
+	get isBasketEmpty(): boolean {
+		return this.basket.length === 0;
 	}
 }

@@ -1,6 +1,6 @@
 import { Component } from './base/Component';
 import { ensureElement } from '../utils/utils';
-import { IEvents } from './base/events';
+import { IEvents } from './base/Events';
 
 interface IModalData {
 	content: HTMLElement;
@@ -24,10 +24,6 @@ export class Modal extends Component<IModalData> {
 		this._content.addEventListener('click', (event) => event.stopPropagation());
 	}
 
-	set content(value: HTMLElement) {
-		this._content.replaceChildren(value);
-	}
-
 	open() {
 		this.container.classList.add('modal_active');
 		this.events.emit('modal:open');
@@ -43,5 +39,9 @@ export class Modal extends Component<IModalData> {
 		super.render(data);
 		this.open();
 		return this.container;
+	}
+
+	set content(value: HTMLElement) {
+		this._content.replaceChildren(value);
 	}
 }

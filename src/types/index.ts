@@ -3,6 +3,12 @@ export interface ICardActions {
 	onClick: (event: MouseEvent) => void;
 }
 
+// интерфейс промиса
+export interface ILarekApi {
+	getLarekList: () => Promise<IProductItem[]>;
+	makeOrder: (value: IOrder) => Promise<IOrderResult>;
+}
+
 // тип ошибки формы
 export type FormErrors = Partial<Record<keyof IOrder, string>>;
 
