@@ -7,7 +7,7 @@ import { AppState } from './components/AppState';
 import { cloneTemplate, ensureElement } from './utils/utils';
 import { Card, CardPreview, CardBasket } from './components/Card';
 import { Page } from './components/Page';
-import { Modal } from './components/Modal';
+import { Modal } from './components/common/Modal';
 import { Order } from './components/Order';
 import { IOrder, IProductItem, IDeliveryForm, IContactsForm } from './types';
 import { Contacts } from './components/Contacts';
@@ -68,8 +68,11 @@ events.on('card:select', (item: IProductItem) => {
 	});
 	modal.render({
 		content: card.render({
-			description: item.description,
+			title: item.title,
+			image: item.image,
 			price: item.price,
+			category: item.category,
+			description: item.description,
 		}),
 	});
 });

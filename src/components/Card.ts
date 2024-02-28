@@ -1,8 +1,8 @@
 import { Component } from './base/Component';
 import { ensureElement } from '../utils/utils';
-import { ICardActions, ICard, ICardPreview, ICardBasket } from '../types/index';
+import { ICardActions, ICard, ICardBasket } from '../types/index';
 
-export class Card<T> extends Component<ICard> {
+export class Card extends Component<ICard> {
 	protected _title: HTMLElement;
 	protected _image: HTMLImageElement;
 	protected _price: HTMLElement;
@@ -49,19 +49,18 @@ export class Card<T> extends Component<ICard> {
 	}
 }
 
-export class CardPreview extends Card<ICardPreview> {
+export class CardPreview extends Card {
 	protected _description: HTMLElement;
 	protected _buttonElement: HTMLButtonElement;
 
 	constructor(container: HTMLElement, actions?: ICardActions) {
-		super(container, actions);
+		super(container);
 		this._description = container.querySelector(`.card__text`);
 
 		if (actions?.onClick) {
 			if (this._buttonElement) {
-				container.removeEventListener('click', actions.onClick);
 				this._buttonElement.addEventListener('click', actions.onClick);
-				this._buttonElement.textContent = 'Купить';
+				this.setText(this._buttonElement, 'Купить');
 			}
 		}
 	}
@@ -79,7 +78,6 @@ export class CardBasket extends Component<ICardBasket> {
 
 	constructor(container: HTMLElement, actions?: ICardActions) {
 		super(container);
-		container.removeEventListener('click', actions.onClick);
 		this._title = ensureElement<HTMLElement>(`.card__title`, container);
 		this._price = ensureElement<HTMLImageElement>(`.card__price`, container);
 		this._index = container.querySelector(`.basket__item-index`);
