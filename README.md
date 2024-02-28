@@ -190,7 +190,6 @@ yarn build
 - `_image: HTMLImageElement` — элемент для вставки изображения
 - `_price: HTMLElement` — элемент с ценой товара
 - `_category: HTMLElement` — элемент категории товара
-- `_buttonElement: HTMLButtonElement` — элемент кнопки
 - `_categoryColorsList = <Record<string, string>>` — список категорий товаров
 
 Методы класса:
@@ -212,10 +211,11 @@ yarn build
 Свойства класса:
 
 - `_description: HTMLElement` — описание единицы товара
-- `_buttonElement: HTMLButtonElement` — элемент кнопки
+- `buttonElement: HTMLButtonElement` — элемент кнопки
 
 Методы класса:
 
+- `changeBasketName(value: string)` — изменить имя для неактивной кнопки
 - `set description(value: string)` — установить описание единицы товара
 
 ### Класс BasketItem

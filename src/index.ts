@@ -76,7 +76,10 @@ events.on('card:select', (item: IProductItem) => {
 		}),
 	});
 
-	if (appData.isInBasket(item)) {
+	if (item.price === null) {
+		card.setDisabled(card.buttonElement, true);
+		card.changeBasketName('Не продается');
+	} else if (appData.isInBasket(item)) {
 		card.setDisabled(card.buttonElement, true);
 		card.changeBasketName('Уже в корзине');
 	}

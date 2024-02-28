@@ -1,6 +1,6 @@
 import { Component } from './base/Component';
 import { ensureElement } from '../utils/utils';
-import { ICardActions, ICard, ICardBasket } from '../types/index';
+import { ICardActions, ICard } from '../types/index';
 
 export class Card extends Component<ICard> {
 	protected _title: HTMLElement;
@@ -59,7 +59,6 @@ export class CardPreview extends Card {
 		if (actions?.onClick) {
 			if (this.buttonElement) {
 				this.buttonElement.addEventListener('click', actions.onClick);
-				// this.setText(this.buttonElement, 'Купить');
 			}
 		}
 	}
