@@ -92,16 +92,6 @@ export class BasketItem extends Card {
 		}
 	}
 
-	set title(value: string) {
-		this.setText(this._title, value);
-	}
-
-	set price(value: number | null) {
-		value === null
-			? this.setText(this._price, `Бесценно`)
-			: this.setText(this._price, `${value} синапсов`);
-	}
-
 	set index(value: number) {
 		this.setText(this._index, value);
 	}

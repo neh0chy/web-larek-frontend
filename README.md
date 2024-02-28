@@ -236,9 +236,7 @@ yarn build
 
 Методы класса:
 
-- `set title(value: string)` — установить описание единицы товара
-- `set price(value: number)` — установить цену товара
-- `set index(value: number)`— установить номер товара
+- `set index(value: number)`— установить порядковый номер товара
 
 ### Класс LarekAPI
 
@@ -414,7 +412,7 @@ export interface IProductItem {
 	image: string; // ссылка на изображение
 	title: string; // название
 	category: string; // категория
-	price: number; // цена
+	price: number | null; // цена
 }
 
 // интерфейс данных единицы товара на главной странице
@@ -422,8 +420,9 @@ export interface ICard {
 	image: string; // ссылка на изображение
 	title: string; // название
 	category: string; // категория
-	price: number; // цена
+	price: number | null; // цена
 	description: string; // описание
+	index?: number;
 }
 
 // интерфейс данных в превью
@@ -433,7 +432,7 @@ export interface ICardPreview {
 
 export interface ICardBasket {
 	title: string; // название
-	price: number; // цена
+	price: number | null; // цена
 	index: number; // индекс в списке
 }
 
