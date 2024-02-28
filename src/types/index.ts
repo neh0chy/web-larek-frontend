@@ -48,6 +48,7 @@ export interface ICard {
 	category: string; // категория
 	price: number; // цена
 	description: string; // описание
+	index?: number;
 }
 
 // интерфейс данных в превью

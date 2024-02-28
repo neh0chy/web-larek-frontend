@@ -5,7 +5,7 @@ import { API_URL, CDN_URL } from './utils/constants';
 import { EventEmitter } from './components/base/Events';
 import { AppState } from './components/AppState';
 import { cloneTemplate, ensureElement } from './utils/utils';
-import { Card, CardPreview, CardBasket } from './components/Card';
+import { Card, CardPreview, BasketItem } from './components/Card';
 import { Page } from './components/Page';
 import { Modal } from './components/common/Modal';
 import { Order } from './components/Order';
@@ -75,6 +75,11 @@ events.on('card:select', (item: IProductItem) => {
 			description: item.description,
 		}),
 	});
+
+	if (appData.isInBasket(item)) {
+		card.setDisabled(card.buttonElement, true);
+		card.changeBasketName('Уже в корзине');
+	}
 });
 
 // установка данных о добавленном элементе корзины
@@ -91,7 +96,7 @@ events.on('basket:open', () => {
 	basket.setDisabled(basket.button, appData.isBasketEmpty);
 	let i = 1;
 	basket.items = appData.basket.map((item) => {
-		const card = new CardBasket(cloneTemplate(cardBasketTemplate), {
+		const card = new BasketItem(cloneTemplate(cardBasketTemplate), {
 			onClick: () => events.emit('card:remove', item),
 		});
 		return card.render({
@@ -113,7 +118,7 @@ events.on('card:remove', (item: IProductItem) => {
 	basket.setDisabled(basket.button, appData.isBasketEmpty);
 	basket.total = appData.getTotal();
 	basket.items = appData.basket.map((item) => {
-		const card = new CardBasket(cloneTemplate(cardBasketTemplate), {
+		const card = new BasketItem(cloneTemplate(cardBasketTemplate), {
 			onClick: () => events.emit('card:remove', item),
 		});
 		let i = 1;

@@ -6,6 +6,7 @@ import {
 	FormErrors,
 	IContactsForm,
 	IDeliveryForm,
+	ICard,
 } from '../types/index';
 
 export type CatalogChangeEvent = {
@@ -78,6 +79,10 @@ export class AppState extends Model<IAppState> {
 		if (this.validateContacts()) {
 			this.events.emit('order:ready', this.order);
 		}
+	}
+
+	isInBasket(item: IProductItem) {
+		return this.basket.includes(item);
 	}
 
 	validateOrder() {
