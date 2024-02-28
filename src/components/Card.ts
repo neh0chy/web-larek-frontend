@@ -96,7 +96,7 @@ export class BasketItem extends Card {
 		this.setText(this._title, value);
 	}
 
-	set price(value: number) {
+	set price(value: number | null) {
 		value === null
 			? this.setText(this._price, `Бесценно`)
 			: this.setText(this._price, `${value} синапсов`);

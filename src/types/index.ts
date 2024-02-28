@@ -38,7 +38,7 @@ export interface IProductItem {
 	image: string; // ссылка на изображение
 	title: string; // название
 	category: string; // категория
-	price: number; // цена
+	price: number | null; // цена
 }
 
 // интерфейс данных единицы товара на главной странице
@@ -46,7 +46,7 @@ export interface ICard {
 	image: string; // ссылка на изображение
 	title: string; // название
 	category: string; // категория
-	price: number; // цена
+	price: number | null; // цена
 	description: string; // описание
 	index?: number;
 }
@@ -58,7 +58,7 @@ export interface ICardPreview {
 
 export interface ICardBasket {
 	title: string; // название
-	price: number; // цена
+	price: number | null; // цена
 	index: number; // индекс в списке
 }
 
