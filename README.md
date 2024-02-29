@@ -229,8 +229,6 @@ yarn build
 
 Свойства класса:
 
-- `_title: HTMLElement` — описание единицы товара
-- `_price: HTMLElement` — цена товара
 - `_buttonElement: HTMLButtonElement` — элемент кнопки
 - `_index: HTMLElement` — номер товара в корзине
 

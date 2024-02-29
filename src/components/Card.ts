@@ -73,15 +73,11 @@ export class CardPreview extends Card {
 }
 
 export class BasketItem extends Card {
-	protected _title: HTMLElement;
-	protected _price: HTMLElement;
 	buttonElement: HTMLButtonElement;
 	protected _index: HTMLElement;
 
 	constructor(container: HTMLElement, actions?: ICardActions) {
 		super(container);
-		this._title = ensureElement<HTMLElement>(`.card__title`, container);
-		this._price = ensureElement<HTMLImageElement>(`.card__price`, container);
 		this._index = container.querySelector(`.basket__item-index`);
 		this.buttonElement = container.querySelector(`.card__button`);
 

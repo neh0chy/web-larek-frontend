@@ -59,7 +59,6 @@ events.on('items:changed', () => {
 			category: item.category,
 		});
 	});
-	console.log(page.catalog);
 });
 
 // открытие карточки с информацией
