@@ -1,6 +1,6 @@
 import { Form } from './common/Form';
 import { IDeliveryForm } from '../types/index';
-import { IEvents } from './base/Events';
+import { IEvents } from './base/events';
 import { ensureAllElements } from '../utils/utils';
 
 export class Order extends Form<IDeliveryForm> {

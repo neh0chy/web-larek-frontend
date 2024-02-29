@@ -2,7 +2,7 @@ import './scss/styles.scss';
 
 import { LarekAPI } from './components/LarekAPI';
 import { API_URL, CDN_URL } from './utils/constants';
-import { EventEmitter } from './components/base/Events';
+import { EventEmitter } from './components/base/events';
 import { AppState } from './components/AppState';
 import { cloneTemplate, ensureElement } from './utils/utils';
 import { Card, CardPreview, BasketItem } from './components/Card';
@@ -59,6 +59,7 @@ events.on('items:changed', () => {
 			category: item.category,
 		});
 	});
+	console.log(page.catalog);
 });
 
 // открытие карточки с информацией
