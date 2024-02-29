@@ -120,11 +120,11 @@ events.on('card:remove', (item: IProductItem) => {
 	page.counter = appData.basket.length;
 	basket.setDisabled(basket.button, appData.isBasketEmpty);
 	basket.total = appData.getTotal();
+	let i = 1;
 	basket.items = appData.basket.map((item) => {
 		const card = new BasketItem(cloneTemplate(cardBasketTemplate), {
 			onClick: () => events.emit('card:remove', item),
 		});
-		let i = 1;
 		return card.render({
 			title: item.title,
 			price: item.price,
